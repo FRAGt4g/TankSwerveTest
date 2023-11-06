@@ -4,19 +4,18 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class TankSwerveSubsystem extends SubsystemBase {
+public class DriveSubsystem extends SubsystemBase {
   public static class Hardware {
-    public CANSparkMax lFrontMotor, lMiddleMotor, lBackMotor;
-    public CANSparkMax rFrontMotor, rMiddleMotor, rBackMotor;
+    public WPI_TalonSRX lFrontMotor, lMiddleMotor, lBackMotor;
+    public WPI_TalonSRX rFrontMotor, rMiddleMotor, rBackMotor;
 
-    public Hardware(CANSparkMax lFrontMotor, CANSparkMax lMiddleMotor, CANSparkMax lBackMotor, CANSparkMax rFrontMotor, CANSparkMax rMiddleMotor, CANSparkMax rBackMotor) {
+    public Hardware(WPI_TalonSRX lFrontMotor, WPI_TalonSRX lMiddleMotor, WPI_TalonSRX lBackMotor, WPI_TalonSRX rFrontMotor, WPI_TalonSRX rMiddleMotor, WPI_TalonSRX rBackMotor) {
       this.lFrontMotor = lFrontMotor;
       this.lMiddleMotor = lMiddleMotor;
       this.lBackMotor = lBackMotor;
@@ -29,12 +28,12 @@ public class TankSwerveSubsystem extends SubsystemBase {
 
   }
 
-  public CANSparkMax m_lFrontMotor, m_lMiddleMotor, m_lBackMotor;
-  public CANSparkMax m_rFrontMotor, m_rMiddleMotor, m_rBackMotor;
+  public WPI_TalonSRX m_lFrontMotor, m_lMiddleMotor, m_lBackMotor;
+  public WPI_TalonSRX m_rFrontMotor, m_rMiddleMotor, m_rBackMotor;
   private DifferentialDrive m_driveTrain;
 
   /** Creates a new TankSwerveSubsystem. */
-  public TankSwerveSubsystem(Hardware tankSwervHardware) {
+  public DriveSubsystem(Hardware tankSwervHardware) {
     m_lFrontMotor = tankSwervHardware.lFrontMotor;
     m_lMiddleMotor = tankSwervHardware.lMiddleMotor;
     m_lBackMotor = tankSwervHardware.lBackMotor;
@@ -58,13 +57,13 @@ public class TankSwerveSubsystem extends SubsystemBase {
 
   public static Hardware initHardware() {
     return new Hardware(
-      new CANSparkMax(Constants.DriveHardware.LEFT_FRONT_MOTOR_PORT, MotorType.kBrushless),
-      new CANSparkMax(Constants.DriveHardware.LEFT_MIDDLE_MOTOR_PORT, MotorType.kBrushless),
-      new CANSparkMax(Constants.DriveHardware.LEFT_BACK_MOTOR_PORT, MotorType.kBrushless),
+      new WPI_TalonSRX(Constants.DriveHardware.LEFT_FRONT_MOTOR_PORT),
+      new WPI_TalonSRX(Constants.DriveHardware.LEFT_MIDDLE_MOTOR_PORT),
+      new WPI_TalonSRX(Constants.DriveHardware.LEFT_BACK_MOTOR_PORT),
       
-      new CANSparkMax(Constants.DriveHardware.RIGHT_FRONT_MOTOR_PORT, MotorType.kBrushless),
-      new CANSparkMax(Constants.DriveHardware.RIGHT_MIDDLE_MOTOR_PORT, MotorType.kBrushless),
-      new CANSparkMax(Constants.DriveHardware.RIGHT_BACK_MOTOR_PORT, MotorType.kBrushless)
+      new WPI_TalonSRX(Constants.DriveHardware.RIGHT_FRONT_MOTOR_PORT),
+      new WPI_TalonSRX(Constants.DriveHardware.RIGHT_MIDDLE_MOTOR_PORT),
+      new WPI_TalonSRX(Constants.DriveHardware.RIGHT_BACK_MOTOR_PORT)
       );
   }
 
