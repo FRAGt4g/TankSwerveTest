@@ -4,8 +4,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
@@ -21,6 +24,8 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem DRIVE_SUBSYSTEM = new DriveSubsystem(DriveSubsystem.initHardware());
 
+  private static final SendableChooser<SequentialCommandGroup> m_automodeChooser = new SendableChooser<SequentialCommandGroup>();
+
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController PRIMARY_CONTROLLER =
       new CommandXboxController(OperatorConstants.PRIMARY_CONTROLLER_PORT);
@@ -29,7 +34,7 @@ public class RobotContainer {
   public RobotContainer() {
     DRIVE_SUBSYSTEM.setDefaultCommand(
       new RunCommand(
-        () -> DRIVE_SUBSYSTEM.teleop(
+        () -> DRIVE_SUBSYSTEM.set(
           PRIMARY_CONTROLLER.getLeftX(),
           PRIMARY_CONTROLLER.getRightX()
         ),
@@ -50,6 +55,54 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+
+  }
+
+  private void m_automodeChooser() {
+    m_automodeChooser.setDefaultOption("Do nothing", new SequentialCommandGroup());
+    m_automodeChooser.addOption("Drive forward", new SequentialCommandGroup(
+      DRIVE_SUBSYSTEM.run(() -> DRIVE_SUBSYSTEM.set(0.5 , 0))
+      .withTimeout(5)
+      .andThen(() -> DRIVE_SUBSYSTEM.stop())
+    ));
+    m_automodeChooser.addOption("Drive backward", new SequentialCommandGroup(
+      DRIVE_SUBSYSTEM.run(() -> DRIVE_SUBSYSTEM.set(-0.5 , 0))
+      .withTimeout(5)
+      .andThen(() -> DRIVE_SUBSYSTEM.stop())
+    ));
+    m_automodeChooser.addOption("Turn right", new SequentialCommandGroup(
+      DRIVE_SUBSYSTEM.run(() -> DRIVE_SUBSYSTEM.set(0, 0.5))
+      .withTimeout(5)
+      .andThen(() -> DRIVE_SUBSYSTEM.stop())
+    ));
+    m_automodeChooser.addOption("Turn left", new SequentialCommandGroup(
+      DRIVE_SUBSYSTEM.run(() -> DRIVE_SUBSYSTEM.set(0.5 , -0.5))
+      .withTimeout(5)
+      .andThen(() -> DRIVE_SUBSYSTEM.stop())
+    ));
+    m_automodeChooser.addOption("Drive forward and turn left", new SequentialCommandGroup(
+      DRIVE_SUBSYSTEM.run(() -> DRIVE_SUBSYSTEM.set(0.5 , -0.5))
+      .withTimeout(5)
+      .andThen(() -> DRIVE_SUBSYSTEM.stop())
+    ));
+    m_automodeChooser.addOption("Drive forward and turn right", new SequentialCommandGroup(
+      DRIVE_SUBSYSTEM.run(() -> DRIVE_SUBSYSTEM.set(0.5 , 0.5))
+      .withTimeout(5)
+      .andThen(() -> DRIVE_SUBSYSTEM.stop())
+    ));
+    m_automodeChooser.addOption("Drive backward and turn left", new SequentialCommandGroup(
+      DRIVE_SUBSYSTEM.run(() -> DRIVE_SUBSYSTEM.set(-0.5 , -0.5))
+      .withTimeout(5)
+      .andThen(() -> DRIVE_SUBSYSTEM.stop())
+    ));
+    m_automodeChooser.addOption("Drive backward and turn right", new SequentialCommandGroup(
+      DRIVE_SUBSYSTEM.run(() -> DRIVE_SUBSYSTEM.set(-0.5 , 0.5))
+      .withTimeout(5)
+      .andThen(() -> DRIVE_SUBSYSTEM.stop())
+    ));
+    m_automodeChooser.addOption("Stop immediately", new SequentialCommandGroup(
+      DRIVE_SUBSYSTEM.run(() -> DRIVE_SUBSYSTEM.stop())
+    ));
   }
 
   /**
@@ -58,6 +111,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return null;
+    return m_automodeChooser.getSelected();
   }
 }
